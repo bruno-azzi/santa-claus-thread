@@ -1,21 +1,21 @@
 package com.company;
 
-import java.util.Random;
-
-public class Main {
-    public static void createElves(int qty, SantaClaus santaClaus) {
-        for (int i = 1; i <= qty; i++) {
-            Elf elf = new Elf("Elf #" + i, santaClaus);
-            elf.start();
-        }
-    }
-
-    public static void main(String[] args) {
-        int maxElves = 10;
-        int maxReindeer = 9;
-
-        SantaClaus santaClaus = new SantaClaus();
-        santaClaus.start();
-        createElves(maxElves, santaClaus);
-    }
+public class Main{
+	public static void main(String[] args){
+		// SantaClaus
+		SantaClaus santaClaus = new SantaClaus();
+		santaClaus.start();
+		
+		// Elf
+		for(int i = 1; i <= 10; i++){
+			Elf elf = new Elf("Elfo #" + i, santaClaus);
+			elf.start();
+		}
+		
+		// Reindeer
+		for(int i = 1; i <= 9; i++){
+			Reindeer reindeer = new Reindeer("Rena #" + i, santaClaus);
+			reindeer.start();
+		}
+	}
 }
