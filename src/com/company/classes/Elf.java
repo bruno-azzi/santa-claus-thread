@@ -1,23 +1,21 @@
-package com.company;
+package com.company.classes;
 
 import java.util.Random;
 
 public class Elf extends Thread {
-
-    public String name;
-    private SantaClaus santaClaus;
-    private Random random;
-    public boolean wait;
+    private final SantaClaus santaClaus;
+    public boolean needToTalkWithSantaClaus;
 
     public Elf(String name, SantaClaus santaClaus) {
-        this.name = name;
+        super(name);
         this.santaClaus = santaClaus;
-        this.random = new Random();
-        this.wait = false;
+        this.needToTalkWithSantaClaus = false;
+
+        start();
     }
 
     public void work() {
-        int chanceToDiscuss = new Random().nextInt(100 - 0) + 1;
+        Integer chanceToDiscuss = new Random().nextInt(100 - 0) + 1;
 
         if (chanceToDiscuss <= 25) {
             talkToSantaClaus();
@@ -28,24 +26,17 @@ public class Elf extends Thread {
 
     public void makeToys() {
         try {
-            int time = random.nextInt(5000) + 10000; // 10s - 15s
-//            int time = 10000;
-            System.out.println(this.name + " irá fabricar brinquedos por: " + time + "ms");
+            Integer time = new Random().nextInt(5000) + 10000;
+            Logger.log("[" + this.getName() + "]" + " está fabricando brinquedos");
             Thread.sleep(time);
         } catch (InterruptedException exc) {
             exc.printStackTrace();
         }
     }
 
-    public void talkToSantaClaus() {
-        System.out.println(this.name + " precisa de ajuda");
-        // Se um elfo precisa de ajuda, ele pede ao Papai Noel
-        // -> "wait ()" é chamado neste tópico
-        santaClaus.addElfToWaitingList(this);
-        wait = true;
-
+    public void talkWithSantaClaus() {
         synchronized(this) {
-            while(wait) {
+            while(needToTalkWithSantaClaus) {
                 try {
                     wait();
                 } catch(InterruptedException e){
@@ -53,6 +44,15 @@ public class Elf extends Thread {
                 }
             }
         }
+    }
+
+    public void talkToSantaClaus() {
+        Logger.log("[" + this.getName() + "]" + " precisa de ajuda");
+
+        santaClaus.addElfToWaitingList(this);
+        needToTalkWithSantaClaus = true;
+
+        this.talkWithSantaClaus();
     }
 
     @Override
