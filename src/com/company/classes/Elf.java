@@ -34,7 +34,7 @@ public class Elf extends Thread {
         }
     }
 
-    public void talkWithSantaClaus() {
+    public void waitForSantaClaus() {
         synchronized(this) {
             while(needToTalkWithSantaClaus) {
                 try {
@@ -52,7 +52,7 @@ public class Elf extends Thread {
         santaClaus.addElfToWaitingList(this);
         needToTalkWithSantaClaus = true;
 
-        this.talkWithSantaClaus();
+        this.waitForSantaClaus();
     }
 
     @Override
